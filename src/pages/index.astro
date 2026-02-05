@@ -128,28 +128,46 @@ const API_URL = "http://localhost:8084/orders/client-1/SemaMelt";
 
 		<script is:inline define:vars={{ productData, API_URL }}>
 			const btn = document.getElementById('orderBtn');
+		
 			btn.addEventListener('click', async () => {
 				const originalText = btn.innerText;
 				btn.disabled = true;
 				btn.innerText = "Processing Your Order...";
-
+		
 				try {
 					const response = await fetch(API_URL, {
 						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
+						headers: { 
+							'Content-Type': 'application/json' 
+						},
+						// Here we add the redirect option
+						redirect: "follow", 
 						body: JSON.stringify(productData)
 					});
-
+		
+					// If the server performed a redirect and we followed it,
+					// the 'response' URL will be the final destination URL.
+					if (response.redirected) {
+						window.location.href = response.url;
+						return;
+					}
+		
 					if (response.ok) {
 						alert("Success! Your order has been placed.");
+						// Optional: if the server does not redirect automatically
+						// but you want to move the user manually:
+						// window.location.href = "/thanks"; 
 					} else {
-						alert("Transaction failed. Check server connection.");
+						alert("Transaction failed. Status: " + response.status);
 					}
 				} catch (e) {
+					console.error("Error:", e);
 					alert("Network error. Please try again later.");
 				} finally {
-					btn.disabled = false;
-					btn.innerText = originalText;
+					if (btn) {
+						btn.disabled = false;
+						btn.innerText = originalText;
+					}
 				}
 			});
 		</script>
