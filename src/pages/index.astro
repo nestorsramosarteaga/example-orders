@@ -18,7 +18,8 @@ const productData = {
   promotional_banner: "https://dummyimage.com/536x190/04f/fff",
 };
 
-const API_URL = "http://localhost:8084/orders/client-1/SemaMelt";
+const apiBase = import.meta.env.PUBLIC_API_URL || "http://localhost";
+const API_URL = `${apiBase}/orders/client-1/SemaMelt`;
 ---
 
 <html lang="en">
