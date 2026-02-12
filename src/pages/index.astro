@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import "toastify-js/src/toastify.css";
 
 const productData = {
     product_name: "Tirzepatide GLP-2-RO",
@@ -207,49 +208,101 @@ const API_URL = `${apiBase}/orders/trevor-rosa/SemaMelt`;
         </footer>
 
         <script is:inline define:vars={{ productData, API_URL }}>
-            const btn = document.getElementById("orderBtn");
+            window.__PAGE_DATA__ = { productData, API_URL };
+        </script>
+        <script>
+            import Toastify from "toastify-js";
 
-            btn.addEventListener("click", async () => {
-                const originalText = btn.innerText;
-                btn.disabled = true;
-                btn.innerText = "Processing Your Order...";
+            const showError = (message: string) => {
+                Toastify({
+                    text: message,
+                    duration: 4000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    style: {
+                        background:
+                            "linear-gradient(to right, #ef4444, #dc2626)",
+                        borderRadius: "12px",
+                        fontWeight: "600",
+                    },
+                }).showToast();
+            };
 
-                try {
-                    const response = await fetch(API_URL, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        // Here we add the redirect option
-                        redirect: "follow",
-                        body: JSON.stringify(productData),
-                    });
+            const showSuccess = (message: string) => {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background:
+                            "linear-gradient(to right, #16a34a, #15803d)",
+                        borderRadius: "12px",
+                        fontWeight: "600",
+                    },
+                }).showToast();
+            };
 
-                    // If the server performed a redirect and we followed it,
-                    // the 'response' URL will be the final destination URL.
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                        return;
-                    }
+            const initOrderButton = () => {
+                const { productData, API_URL } = window.__PAGE_DATA__;
+                const btn = document.getElementById("orderBtn") as HTMLButtonElement;
 
-                    if (response.ok) {
-                        alert("Success! Your order has been placed.");
-                        // Optional: if the server does not redirect automatically
-                        // but you want to move the user manually:
-                        // window.location.href = "/thanks";
-                    } else {
-                        alert("Transaction failed. Status: " + response.status);
-                    }
-                } catch (e) {
-                    console.error("Error:", e);
-                    alert("Network error. Please try again later.");
-                } finally {
-                    if (btn) {
-                        btn.disabled = false;
-                        btn.innerText = originalText;
-                    }
+                if (!btn) {
+                    console.error("Order button not found.");
+                    return;
                 }
-            });
+
+                btn.addEventListener("click", async () => {
+                    const originalText = btn.innerText;
+                    btn.disabled = true;
+                    btn.innerText = "Processing Your Order...";
+
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(productData),
+                        });
+
+                        let data: { message?: string; redirect_url?: string } = {};
+                        try {
+                            data = await response.json();
+                        } catch {
+                            data = {};
+                        }
+                        console.log("API Response:", data);
+                        if (!response.ok) {
+                            // Handle API errors
+                            showError(data.message || "Something went wrong");
+                            return;
+                        }
+
+                        if (data.redirect_url) {
+                            setTimeout(() => {
+                                window.location.href = data.redirect_url;
+                            }, 1200);
+                        }
+                    } catch (e) {
+                        console.error("Error:", e);
+                        showError("Network error. Please try again later.");
+                    } finally {
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerText = originalText;
+                        }
+                    }
+                });
+            };
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", initOrderButton);
+            } else {
+                initOrderButton();
+            }
         </script>
     </body>
 </html>
