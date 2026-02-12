@@ -274,7 +274,7 @@ const API_URL = `${apiBase}/orders/trevor-rosa/SemaMelt`;
                         } catch {
                             data = {};
                         }
-                        console.log("API Response:", data);
+                        
                         if (!response.ok) {
                             // Handle API errors
                             showError(data.message || "Something went wrong");
