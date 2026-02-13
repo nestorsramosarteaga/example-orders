@@ -3,25 +3,21 @@ import "../styles/global.css";
 import "toastify-js/src/toastify.css";
 
 const productData = {
-    product_name: "Tirzepatide GLP-2-RO",
-    product_strength: "60 mg",
-    quantity_ordered: 50,
-    price: 699,
-    full_price: 999,
+    product_name: "Omidon",
+    product_strength: "0.25 mg",
+    quantity_ordered: 30,
+    price: 249,
+    full_price: 299,
     description:
-        "interdum non dignissim eu, laoreet tincidunt augue. Suspendisse in ante cursus, sollicitudin ante vitae, varius justo",
-    subtitle: "Vestibulum sed molestie vitae",
-    features: [
-        "Rapid absorption formula",
-        "Enhanced metabolic support",
-        "Clinical grade ingredients",
-    ],
+        "interdum non dignissim eu, laoreet tincidunt augue. Vestibulum sed molestie vitae, sollicitudin ante vitae",
+    subtitle: "Suspendisse in ante cursus",
+    features: ["Rapid absorption formula", "Clinical grade ingredients"],
     commit_button_text: "Commit Order",
-    promotional_banner: "https://dummyimage.com/536x190/04f/fff",
+    promotional_banner: "https://dummyimage.com/536x190/04f/aaa",
 };
 
 const apiBase = import.meta.env.PUBLIC_ORDER_URL || "http://localhost";
-const API_URL = `${apiBase}/orders/trevor-rosa/SemaMelt`; // API endpoint by client /orders/client-slug/product-slug
+const API_URL = `${apiBase}/orders/clinic-test-clinic/omidon`;
 ---
 
 <html lang="en">
@@ -59,7 +55,7 @@ const API_URL = `${apiBase}/orders/trevor-rosa/SemaMelt`; // API endpoint by cli
                     <div
                         class="bg-green-100 text-green-700 px-3 py-1 rounded-lg text-sm font-bold"
                     >
-                        Save $300
+                        Save ${productData.full_price - productData.price}
                     </div>
                 </div>
 
