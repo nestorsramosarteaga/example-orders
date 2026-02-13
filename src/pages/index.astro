@@ -287,7 +287,7 @@ const API_URL = `${apiBase}/orders/trevor-rosa/SemaMelt`; // API endpoint by cli
                         if (data.redirect_url) {
                             setTimeout(() => {
                                 window.location.href = data.redirect_url;
-                            }, 1200);
+                            }, 500);
                         }
                     } catch (e) {
                         console.error("Error:", e);

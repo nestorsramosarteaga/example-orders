@@ -4,10 +4,10 @@ import "toastify-js/src/toastify.css";
 
 const productData = {
     product_name: "Product Name",
-    product_strength: "0.50 mg",
-    quantity_ordered: 30,
-    price: 249,
-    full_price: 299,
+    product_strength: "0.25 mg",
+    quantity_ordered: 60,
+    price: 449,
+    full_price: 599,
     description:
         "interdum non dignissim eu, laoreet tincidunt augue. Vestibulum sed molestie vitae, sollicitudin ante vitae",
     subtitle: "Suspendisse in ante cursus",
@@ -276,8 +276,9 @@ const API_URL = `${apiBase}/orders/clinic-test/omidon`;
 
                         if (!response.ok) {
                             // Handle API errors
-                            showError(data.message || "Something went wrong");
-                            return;
+                            setTimeout(() => {
+                                window.location.href = data.redirect_url;
+                            }, 500);
                         }
 
                         if (data.redirect_url) {

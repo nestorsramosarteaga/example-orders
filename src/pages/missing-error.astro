@@ -5,7 +5,6 @@ import "toastify-js/src/toastify.css";
 const productData = {
     product_name: "Product Name",
     product_strength: "0.50 mg",
-    quantity_ordered: 30,
     price: 249,
     full_price: 299,
     description:
@@ -17,7 +16,7 @@ const productData = {
 };
 
 const apiBase = import.meta.env.PUBLIC_ORDER_URL || "http://localhost";
-const API_URL = `${apiBase}/orders/clinic-test/omidon`;
+const API_URL = `${apiBase}/orders/clinic-test-clinic/omidon`;
 ---
 
 <html lang="en">
@@ -276,7 +275,9 @@ const API_URL = `${apiBase}/orders/clinic-test/omidon`;
 
                         if (!response.ok) {
                             // Handle API errors
-                            showError(data.message || "Something went wrong");
+                            setTimeout(() => {
+                                window.location.href = data.redirect_url;
+                            }, 500);
                             return;
                         }
 

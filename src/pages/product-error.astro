@@ -17,7 +17,7 @@ const productData = {
 };
 
 const apiBase = import.meta.env.PUBLIC_ORDER_URL || "http://localhost";
-const API_URL = `${apiBase}/orders/clinic-test/omidon`;
+const API_URL = `${apiBase}/orders/clinic-test-clinic/omidon`;
 ---
 
 <html lang="en">
@@ -276,8 +276,9 @@ const API_URL = `${apiBase}/orders/clinic-test/omidon`;
 
                         if (!response.ok) {
                             // Handle API errors
-                            showError(data.message || "Something went wrong");
-                            return;
+                            setTimeout(() => {
+                                window.location.href = data.redirect_url;
+                            }, 500);
                         }
 
                         if (data.redirect_url) {
